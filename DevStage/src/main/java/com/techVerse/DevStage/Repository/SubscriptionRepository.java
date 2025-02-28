@@ -6,5 +6,5 @@ import com.techVerse.DevStage.Entities.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface SubscriptionRepository extends CrudRepository<Subscription, Integer> {
-    public Subscription findByEventAndSubscriber(Event event, User user);
+    Subscription findByEventAndSubscriber(Event event, User user);
 }
