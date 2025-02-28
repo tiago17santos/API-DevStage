@@ -1,6 +1,7 @@
 package com.techVerse.DevStage.Services;
 
 import com.techVerse.DevStage.Dtos.SubscriptionDto;
+import com.techVerse.DevStage.Dtos.SubscriptionResponse;
 import com.techVerse.DevStage.Dtos.UserDto;
 import com.techVerse.DevStage.Entities.Event;
 import com.techVerse.DevStage.Entities.Subscription;
@@ -9,8 +10,11 @@ import com.techVerse.DevStage.Repository.EventRepository;
 import com.techVerse.DevStage.Repository.SubscriptionRepository;
 import com.techVerse.DevStage.Repository.UserRepository;
 import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
+import com.techVerse.DevStage.Services.Exceptions.SubscriptionConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SubscriptionService {
@@ -24,12 +28,16 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    public SubscriptionDto createNewSubscription(String eventName, UserDto subs) {
+    public SubscriptionResponse createNewSubscription(String eventName, UserDto subs) {
 
         User user = new User();
         user.setUserName(subs.getUserName());
         user.setUserEmail(subs.getUserEmail());
-        user = userRepository.save(user);
+        List<User> users = userRepository.findByUserEmail(user.getUserEmail());
+
+        if(users.isEmpty()){
+            user = userRepository.save(user);
+        }
 
         Event event = eventRepository.findByPrettyName(eventName);
 
@@ -40,8 +48,16 @@ public class SubscriptionService {
         Subscription subscription = new Subscription();
         subscription.setEvent(event);
         subscription.setSubscriber(user);
+
+        Subscription tmpSubscription = subscriptionRepository.findByEventAndSubscriber(event, user);
+        if (tmpSubscription != null) {
+            throw new SubscriptionConflictException("Subscription already exists for user " + user.getUserName() + " in event " + eventName);
+        }
+
         subscription = subscriptionRepository.save(subscription);
 
-        return new SubscriptionDto(subscription);
+        String link = "https://devstage.com/" + subscription.getEvent().getPrettyName() + "/" + subscription.getSubscriber().getUserId();
+
+        return new SubscriptionResponse(subscription.getSubscriptionNumber(), link);
     }
 }
