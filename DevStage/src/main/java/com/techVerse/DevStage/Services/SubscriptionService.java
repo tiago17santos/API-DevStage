@@ -33,17 +33,21 @@ public class SubscriptionService {
     @Transactional
     public SubscriptionResponse createNewSubscription(String eventName, UserDto subs, Integer userId) {
 
-        User user = new User();
-        user.setUserName(subs.getUserName());
-        user.setUserEmail(subs.getUserEmail());
-        List<User> users = userRepository.findByUserEmail(user.getUserEmail());
-        if(users.isEmpty()){
+        User user = userRepository.findByUserEmail(subs.getUserEmail());
+
+        if(user == null){
+            user = new User();
+            user.setUserName(subs.getUserName());
+            user.setUserEmail(subs.getUserEmail());
             user = userRepository.save(user);
         }
 
-        User indicador = userRepository.findById(userId).orElse(null);
-        if(indicador == null){
-            throw new UserIndicationNotFound("User " + userId + " not found");
+        User indicador =  null;
+        if (userId != null) {
+            indicador = userRepository.findById(userId).orElse(null);
+            if (indicador == null) {
+                throw new UserIndicationNotFound("User " + userId + " not found");
+            }
         }
 
         Event event = eventRepository.findByPrettyName(eventName);
@@ -55,14 +59,6 @@ public class SubscriptionService {
         subscription.setEvent(event);
         subscription.setSubscriber(user);
         subscription.setIndication(indicador);
-        
-
-        /*
-        Event persistedEvent = eventRepository.findById(event.getEventId())
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
-        User persistedUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        */
 
         Subscription tmpSubscription = subscriptionRepository.findByEventAndSubscriber(event, user);
         if (tmpSubscription != null) {
