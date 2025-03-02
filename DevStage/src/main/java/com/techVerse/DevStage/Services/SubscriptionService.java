@@ -1,5 +1,7 @@
 package com.techVerse.DevStage.Services;
 
+
+import com.techVerse.DevStage.Dtos.SubscriptionRankingItem;
 import com.techVerse.DevStage.Dtos.SubscriptionResponse;
 import com.techVerse.DevStage.Dtos.UserDto;
 import com.techVerse.DevStage.Entities.Event;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Service
 public class SubscriptionService {
@@ -71,4 +74,14 @@ public class SubscriptionService {
 
         return new SubscriptionResponse(subscription.getSubscriptionNumber(), link);
     }
+
+    public List<SubscriptionRankingItem> getCompleteRanking(String prettyName){
+        Event event = eventRepository.findByPrettyName(prettyName);
+        if(event == null){
+            throw new EventNotFoundException("Event " + prettyName + " not found");
+        }
+        return subscriptionRepository.generateRanking(event.getEventId());
+    }
+
+
 }
