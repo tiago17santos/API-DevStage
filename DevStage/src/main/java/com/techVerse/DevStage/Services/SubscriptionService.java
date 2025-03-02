@@ -1,6 +1,6 @@
 package com.techVerse.DevStage.Services;
 
-
+import com.techVerse.DevStage.Dtos.SubscriptionRankingByUser;
 import com.techVerse.DevStage.Dtos.SubscriptionRankingItem;
 import com.techVerse.DevStage.Dtos.SubscriptionResponse;
 import com.techVerse.DevStage.Dtos.UserDto;
@@ -83,5 +83,15 @@ public class SubscriptionService {
         return subscriptionRepository.generateRanking(event.getEventId());
     }
 
+    public SubscriptionRankingByUser getRankingByUser(String prettyName, Integer userId){
+        List<SubscriptionRankingItem> ranking = getCompleteRanking(prettyName);
+        SubscriptionRankingItem item = ranking.stream().filter(id -> id.userId().equals(userId)).findFirst().orElse(null);
+        if(item == null){
+            throw new UserIndicationNotFound("There are no registrations with indication made by user " + userId);
+        }
 
+        int posicao = IntStream.range(0, ranking.size()).filter(pos -> ranking.get(pos).userId().equals(userId)).findFirst().getAsInt();
+
+        return new SubscriptionRankingByUser(posicao+1, item);
+    }
 }
