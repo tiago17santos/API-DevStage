@@ -3,6 +3,7 @@ package com.techVerse.DevStage.Services;
 import com.techVerse.DevStage.Dtos.EventDto;
 import com.techVerse.DevStage.Entities.Event;
 import com.techVerse.DevStage.Repository.EventRepository;
+import com.techVerse.DevStage.Services.Exceptions.EventInvalidException;
 import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class EventService {
     private EventRepository eventRepository;
 
     public EventDto saveEvent(EventDto eventDto) {
+
         Event event = new Event();
 
         event.setTitle(eventDto.getTitle());

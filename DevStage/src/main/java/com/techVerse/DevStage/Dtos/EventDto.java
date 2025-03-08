@@ -2,6 +2,8 @@ package com.techVerse.DevStage.Dtos;
 
 import com.techVerse.DevStage.Entities.Event;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,16 +13,19 @@ public class EventDto {
     @Column(name = "event_id")
     private Integer eventId;
 
+    @NotBlank(message = "O título é obrigatório")
     @Column(name = "title", length = 255, nullable = false)
     private String title;
 
     @Column(name = "pretty_name",length = 50, nullable = false, unique = true)
     private String prettyName;
 
+    @NotBlank(message = "A localização é obrigatória")
     @Column(name = "location", length = 255, nullable = false)
     private String location;
 
-    @Column(name = "title", length = 255, nullable = false)
+    @NotBlank(message = "O preço é obrigatório")
+    @Column(name = "price", length = 255, nullable = false)
     private Double price;
 
     @Column(name = "start_date")

@@ -78,13 +78,28 @@ public class EventControllerIntegrationTest {
     }
 
     @Test
+    public void testSaveEventFailure(){
+        String url = "http://localhost:" + port + "/events";
+
+        EventDto invalidEventDto = new EventDto();
+        invalidEventDto.setTitle("EventTest");
+        invalidEventDto.setLocation("Online");
+
+        ResponseEntity<EventDto> response = restTemplate.postForEntity(url, invalidEventDto, EventDto.class);
+
+        // Verifica se a resposta HTTP foi 400 (requisição está malformada ou inválida)
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+    }
+
+    @Test
     public void testGetEventByPrettyName_ValidPrettyName() {
         String url = "http://localhost:" + port + "/events/" + event.getPrettyName();
 
         // Realizando o GET no endpoint /eventos/{pretty_name} para buscar o evento especifico
         ResponseEntity<EventDto> response = restTemplate.getForEntity(url, EventDto.class);
 
-        // Verifica se a resposta HTTP foi 200 (OK)
+        // Verifica se a resposta HTTP foi 200 (requisição foi bem-sucedida)
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(event.getPrettyName(), response.getBody().getPrettyName());
@@ -98,10 +113,28 @@ public class EventControllerIntegrationTest {
         // Realizando o GET no endpoint /eventos/{pretty_name} para buscar o evento especifico
         ResponseEntity<EventDto> response = restTemplate.getForEntity(url, EventDto.class);
 
-        // Verifica se a resposta HTTP foi 404 (NOT_FOUND)
+        // Verifica se a resposta HTTP foi 404 (não foi encontrado)
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
     }
 
+    @Test
+    public void testGetAllEvents() {
+        String url = "http://localhost:" + port + "/events";
 
+        ResponseEntity<EventDto[]> response = restTemplate.getForEntity(url, EventDto[].class);
+
+        // Verifica se a resposta HTTP foi 200 (requisição foi bem-sucedida)
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetAllEventsNoContent() {
+        String url = "http://localhost:" + port + "/events";
+
+        ResponseEntity<EventDto[]> response = restTemplate.getForEntity(url, EventDto[].class);
+
+    // Verifica se a resposta HTTP foi 204 (requisição foi bem-sucedida, mas não há conteúdo para retornar)
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
 }

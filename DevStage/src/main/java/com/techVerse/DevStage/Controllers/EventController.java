@@ -5,6 +5,8 @@ import com.techVerse.DevStage.Services.EventService;
 import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,10 +21,14 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventDto> save(@RequestBody EventDto eventDto) {
+    public ResponseEntity<EventDto> save(@RequestBody @Valid EventDto eventDto, BindingResult result) {
+        if (result.hasErrors()) {
+            // Retorna 400 Bad Request com os erros de validação no dto
+            return ResponseEntity.badRequest().build();
+        }
         eventDto = eventService.saveEvent(eventDto);
         if (eventDto == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(eventDto.getEventId()).toUri();
