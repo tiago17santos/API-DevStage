@@ -25,8 +25,7 @@ public class Event {
 
     }
 
-    public Event(Integer eventId, String title, String prettyName, String location, Double price, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        this.eventId = eventId;
+    public Event( String title, String prettyName, String location, Double price, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.title = title;
         this.prettyName = prettyName;
         this.location = location;

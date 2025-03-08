@@ -3,6 +3,7 @@ package com.techVerse.DevStage.Services;
 import com.techVerse.DevStage.Dtos.EventDto;
 import com.techVerse.DevStage.Entities.Event;
 import com.techVerse.DevStage.Repository.EventRepository;
+import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,9 @@ public class EventService {
 
     public EventDto getEventByPrettyName(String prettyName) {
         Event event = eventRepository.findByPrettyName(prettyName);
+        if (event == null) {
+            throw new EventNotFoundException("Event: " + prettyName + " not found!");
+        }
         return new EventDto(event);
     }
 

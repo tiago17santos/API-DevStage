@@ -2,10 +2,13 @@ package com.techVerse.DevStage.Controllers;
 
 import com.techVerse.DevStage.Dtos.EventDto;
 import com.techVerse.DevStage.Services.EventService;
+import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,16 +21,22 @@ public class EventController {
     @PostMapping
     public ResponseEntity<EventDto> save(@RequestBody EventDto eventDto) {
         eventDto = eventService.saveEvent(eventDto);
-        return ResponseEntity.ok(eventDto);
+        if (eventDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(eventDto.getEventId()).toUri();
+        return ResponseEntity.created(uri).body(eventDto);
     }
 
     @GetMapping("/{prettyName}")
     public ResponseEntity<EventDto> getEventByPrettyName(@PathVariable String prettyName) {
-        EventDto eventDto = eventService.getEventByPrettyName(prettyName);
-        if (eventDto == null) {
+        try {
+            EventDto eventDto = eventService.getEventByPrettyName(prettyName);
+            return ResponseEntity.ok(eventDto);
+        } catch (EventNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(eventDto);
     }
 
     @GetMapping
