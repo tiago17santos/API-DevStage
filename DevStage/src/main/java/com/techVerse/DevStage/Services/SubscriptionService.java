@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -38,14 +37,14 @@ public class SubscriptionService {
 
         User user = userRepository.findByUserEmail(subs.getUserEmail());
 
-        if(user == null){
+        if (user == null) {
             user = new User();
             user.setUserName(subs.getUserName());
             user.setUserEmail(subs.getUserEmail());
             user = userRepository.save(user);
         }
 
-        User indicador =  null;
+        User indicador = null;
         if (userId != null) {
             indicador = userRepository.findById(userId).orElse(null);
             if (indicador == null) {
@@ -75,23 +74,23 @@ public class SubscriptionService {
         return new SubscriptionResponse(subscription.getSubscriptionNumber(), link);
     }
 
-    public List<SubscriptionRankingItem> getCompleteRanking(String prettyName){
+    public List<SubscriptionRankingItem> getCompleteRanking(String prettyName) {
         Event event = eventRepository.findByPrettyName(prettyName);
-        if(event == null){
+        if (event == null) {
             throw new EventNotFoundException("Event " + prettyName + " not found");
         }
         return subscriptionRepository.generateRanking(event.getEventId());
     }
 
-    public SubscriptionRankingByUser getRankingByUser(String prettyName, Integer userId){
+    public SubscriptionRankingByUser getRankingByUser(String prettyName, Integer userId) {
         List<SubscriptionRankingItem> ranking = getCompleteRanking(prettyName);
         SubscriptionRankingItem item = ranking.stream().filter(id -> id.userId().equals(userId)).findFirst().orElse(null);
-        if(item == null){
+        if (item == null) {
             throw new UserIndicationNotFound("There are no registrations with indication made by user " + userId);
         }
 
         int posicao = IntStream.range(0, ranking.size()).filter(pos -> ranking.get(pos).userId().equals(userId)).findFirst().getAsInt();
 
-        return new SubscriptionRankingByUser(posicao+1, item);
+        return new SubscriptionRankingByUser(posicao + 1, item);
     }
 }

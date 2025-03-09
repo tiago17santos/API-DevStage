@@ -78,7 +78,7 @@ public class EventControllerIntegrationTest {
     }
 
     @Test
-    public void testSaveEventFailure(){
+    public void testSaveEventFailure() {
         String url = "http://localhost:" + port + "/events";
 
         EventDto invalidEventDto = new EventDto();
@@ -134,7 +134,7 @@ public class EventControllerIntegrationTest {
 
         ResponseEntity<EventDto[]> response = restTemplate.getForEntity(url, EventDto[].class);
 
-    // Verifica se a resposta HTTP foi 204 (requisição foi bem-sucedida, mas não há conteúdo para retornar)
+        // Verifica se a resposta HTTP foi 204 (requisição foi bem-sucedida, mas não há conteúdo para retornar)
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }

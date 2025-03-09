@@ -10,15 +10,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int userID;
-    @Column(name = "user_name",length = 255, nullable = false)
+    @Column(name = "user_name", length = 255, nullable = false)
     private String userName;
-    @Column(name = "user_email",length = 255, nullable = false, unique = true)
+    @Column(name = "user_email", length = 255, nullable = false, unique = true)
     private String userEmail;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(int userID, String userName, String userEmail) {
-        this.userID = userID;
+    public User(String userName, String userEmail) {
         this.userName = userName;
         this.userEmail = userEmail;
     }

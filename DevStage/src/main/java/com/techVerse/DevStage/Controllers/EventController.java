@@ -3,9 +3,9 @@ package com.techVerse.DevStage.Controllers;
 import com.techVerse.DevStage.Dtos.EventDto;
 import com.techVerse.DevStage.Services.EventService;
 import com.techVerse.DevStage.Services.Exceptions.EventNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,7 +48,7 @@ public class EventController {
     @GetMapping
     public ResponseEntity<List<EventDto>> getAllEvents() {
         List<EventDto> events = eventService.getAllEvents();
-        if(events.size() <= 0){
+        if (events.size() <= 0) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(events);

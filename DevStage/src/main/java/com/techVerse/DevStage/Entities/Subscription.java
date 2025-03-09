@@ -23,10 +23,10 @@ public class Subscription {
     private User indication;
 
 
-    public Subscription() {}
+    public Subscription() {
+    }
 
-    public Subscription(int subscriptionNumber, Event event, User subscriber, User indication) {
-        this.subscriptionNumber = subscriptionNumber;
+    public Subscription(Event event, User subscriber, User indication) {
         this.event = event;
         this.subscriber = subscriber;
         this.indication = indication;
