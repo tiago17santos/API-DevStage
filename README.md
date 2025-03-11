@@ -17,7 +17,10 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **Spring Boot 3.x**: Framework utilizado para o desenvolvimento da aplicação.
 - **Spring Data JPA**: Para a integração com bancos de dados relacionais (MySQL).
 - **MySQL**: Banco de dados utilizado para armazenar dados de usuários e inscrições.
-- **JUnit e Mockito**: Frameworks para testes unitários e integração.
+- **Docker**: Utilizado para facilitar a execução do banco de dados MySQL.
+- **Postman**: Para documentação automática da API.
+- **JUnit**: Framework para testes unitários e integração.
+- **TestRestTemplate**: Usado para realizar testes de integração com os endpoints REST da aplicação.
 - **Maven**: Gerenciador de dependências e construção do projeto.
 
 ## Como Executar o Projeto
@@ -57,7 +60,13 @@ Certifique-se de ter o seguinte instalado em sua máquina:
     ```
     http://localhost:8080
     ```
+    
+6. Para acessar a documentação da API com o Postman:
 
+    ```
+    https://documenter.getpostman.com/view/35154992/2sAYk8u3FD
+    ```
+    
 ## Como Contribuir
 
 1. Faça um fork deste repositório.
